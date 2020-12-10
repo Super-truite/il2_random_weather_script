@@ -7,6 +7,12 @@ This way, the next time the mission gets launched in the mission rotation, the w
 Install python 3. For instance, use Anaconda to install python on your server :
 https://repo.anaconda.com/archive/Anaconda3-2019.10-Windows-x86_64.exe
 To launch a python console: windows key + type anaconda + hit enter on  'anaconda prompt' 
+in this terminal install the packages regex and numpy in an environment:
+```
+conda create -n il2  python=3.6
+activate il2
+pip install numpy regex
+```
 
 ## Mission files organization  
 The Dogfight folder should not contain the .Mission file as it would be downloaded by players by default which is not optimal (slower download speed).
