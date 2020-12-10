@@ -29,5 +29,9 @@ python random_weather.py
 ```
 The weather should change in between two missions
 
+## Thanks
+
+Thanks to Murleen for the mlg2txt parser (https://github.com/Murleen/mlg2txt)
+
 
  
