@@ -9,8 +9,8 @@ This way, the next time the mission gets launched in the mission rotation, the w
 ## Python Installation
 Install python 3.6 For instance, use Anaconda to install python on your server :
 https://repo.anaconda.com/archive/Anaconda3-2019.10-Windows-x86_64.exe
-To launch a python console: windows key + type anaconda + hit enter on  'anaconda prompt' 
-in this terminal create and activate the environment with the required packages:
+To launch a command prompt: windows key + type anaconda + hit enter on  'anaconda prompt'.
+In this prompt create and activate the environment with the required packages:
 ```
 conda create -n il2 python=3.6 configparser numpy regex -y
 activate il2
