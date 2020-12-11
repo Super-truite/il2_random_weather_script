@@ -35,6 +35,18 @@ python random_weather.py
 ```
 The weather should change in between two missions
 
+## Building the script to an executable
+install pyinstaller:
+```
+pip install pyinstaller
+```
+generate the exe:
+```
+pyinstaller -c random_weather.py
+```
+copy paste the config.ini in the dist/random_weather folder
+
+
 ## Thanks
 
 Thanks to Murleen for the mlg2txt parser (https://github.com/Murleen/mlg2txt)

@@ -6,13 +6,19 @@ import numpy as np
 import subprocess
 import shutil
 from mlg2txt_function2 import parse_mlg
-import config_weather_script
+import configparser
 
-exe_resaver = config_weather_script.exe_resaver
-path_data = config_weather_script.path_data
-path_mlg = config_weather_script.path_mlg
-path_raw_missions = config_weather_script.path_raw_missions
-path_dogfight = config_weather_script.path_dogfight
+
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+
+
+exe_resaver = config['DEFAULT']['exe_resaver']
+path_data = config['DEFAULT']['path_data']
+path_mlg = config['DEFAULT']['path_mlg']
+path_raw_missions = config['DEFAULT']['path_raw_missions']
+path_dogfight = config['DEFAULT']['path_dogfight']
 
 
 def string_wind_layer(random_windlayer):
@@ -34,30 +40,34 @@ def make_random_mission_options(season):
     '''
     Creating random data for mission options
     '''
+    clouds_type = random.choice(['00_clear', '01_light', '02_medium', '03_heavy', '04_overcast'])
+    PrecType = 0
+    PrecLevel = 0
+    scale_wind = 5
+    random_wind_direction = random.randint(0, 359)
+    random_wind_directions = []
+    for i in range(5):
+        random_wind_directions.append(random_wind_direction)
+        random_wind_direction = int(random_wind_direction + 5 * np.random.normal()) % 360
     if season == 'su':
-        clouds_type = random.choice(['00_clear', '01_light', '02_medium', '03_heavy', '04_overcast'])
-        PrecType = 0
-        PrecLevel = 0
+        max_level = 3500
         if clouds_type == '04_overcast':
             PrecType = random.randint(0, 1)
             if PrecType == 1:
                 PrecLevel = random.randint(0, 100)
-        random_wind = 10 * np.abs(np.random.normal())  # mean value: 7m/s, rarely above 49m/s
+                max_level = 1000
+                scale_wind = 7
+        random_wind = scale_wind * np.abs(np.random.normal())  # mean value: 7m/s, rarely above 49m/s
         random_winds = []
         for i in range(5):
             random_winds.append(random_wind)
             random_wind = random_wind + np.abs(np.random.normal())
         random_winds = ['%.2f' % rw for rw in random_winds]
-        random_wind_direction = random.randint(0, 359)
-        random_wind_directions = []
-        for i in range(5):
-            random_wind_directions.append(random_wind_direction)
-            random_wind_direction = int(random_wind_direction + 5 * np.random.normal()) % 360
-        d_summer = {'Time': '{0}:30:0'.format(random.randint(6, 17)),
-                    'CloudLevel': random.randint(500, 3500),
+        dict_options = {'Time': '{0}:30:0'.format(random.randint(6, 17)),
+                    'CloudLevel': random.randint(500, max_level),
                     'CloudConfig': "summer\\\{0}_0{1}\\sky.ini".format(clouds_type, random.randint(0, 9)),
                     'SeaState': random.randint(0, 6),
-                    'Turbulence': random.randint(0, 10),
+                    'Turbulence': random.randint(0, 1),
                     'Temperature': random.randint(20, 35),
                     'Pressure': random.randint(682, 796),
                     'Haze': str(random.random())[0:3],
@@ -69,7 +79,39 @@ def make_random_mission_options(season):
                                    '2000': {'direction': random_wind_directions[3], 'speed': random_winds[3]},
                                    '5000': {'direction': random_wind_directions[4], 'speed': random_winds[4]}}
                     }
-        return d_summer
+    elif season == 'wi':
+        max_level = 3500
+        if clouds_type == '04_overcast':
+            PrecType = random.randint(0, 1)
+            if PrecType == 2:
+                PrecLevel = random.randint(0, 100)
+                max_level = 1000
+                scale_wind = 10
+        random_wind = 8 * np.abs(np.random.normal())  # mean value: 7m/s, rarely above 49m/s
+        random_winds = []
+        for i in range(5):
+            random_winds.append(random_wind)
+            random_wind = random_wind + np.abs(np.random.normal())
+        random_winds = ['%.2f' % rw for rw in random_winds]
+        dict_options = {'Time': '{0}:30:0'.format(random.randint(6, 17)),
+                    'CloudLevel': random.randint(500, max_level),
+                    'CloudConfig': "summer\\\{0}_0{1}\\sky.ini".format(clouds_type, random.randint(0, 9)),
+                    'SeaState': random.randint(0, 6),
+                    'Turbulence': random.randint(0, 1),
+                    'Temperature': random.randint(-35, 10),
+                    'Pressure': random.randint(682, 796),
+                    'Haze': str(random.random())[0:3],
+                    'PrecType': PrecType,
+                    'PrecLevel': PrecLevel,
+                    'WindLayers': {'ground': {'direction': random_wind_directions[0], 'speed': random_winds[0]},
+                                   '500': {'direction': random_wind_directions[1], 'speed': random_winds[1]},
+                                   '1000': {'direction': random_wind_directions[2], 'speed': random_winds[2]},
+                                   '2000': {'direction': random_wind_directions[3], 'speed': random_winds[3]},
+                                   '5000': {'direction': random_wind_directions[4], 'speed': random_winds[4]}}
+                    }
+    else:
+        raise ValueError
+        return dict_options
 
 
 def list_mlg_logs():
@@ -136,18 +178,18 @@ def randomize_weather(mission):
     '''
     original_file = open(path_raw_missions + '\\' + mission, 'r').read()
     season = re.findall(r'SeasonPrefix = \"([^;]*)\";', original_file)[0]
-    d_summer = make_random_mission_options(season)
-    new_file = re.sub(r'CloudConfig = \"([^"]*)\";', 'CloudConfig = "{}";'.format(d_summer['CloudConfig']),
+    dict_options = make_random_mission_options(season)
+    new_file = re.sub(r'CloudConfig = \"([^"]*)\";', 'CloudConfig = "{}";'.format(dict_options['CloudConfig']),
                       original_file)
-    new_file = re.sub(r'CloudLevel = ([^;]*);', 'CloudLevel = {};'.format(d_summer['CloudLevel']), new_file)
-    new_file = re.sub(r'SeaState = ([^;]*);', 'SeaState = {};'.format(d_summer['SeaState']), new_file)
-    new_file = re.sub(r'Turbulence = ([^;]*);', 'Turbulence = {};'.format(d_summer['Turbulence']), new_file)
-    new_file = re.sub(r'Pressure = ([^;]*);', 'Pressure = {};'.format(d_summer['Pressure']), new_file)
-    new_file = re.sub(r'Haze = ([^;]*);', 'Haze = {};'.format(d_summer['Haze']), new_file)
-    new_file = re.sub(r'Temperature = ([^;]*);', 'Temperature = {};'.format(d_summer['Temperature']), new_file)
-    new_file = re.sub(r'PrecType = ([^;]*);', 'PrecType = {};'.format(d_summer['PrecType']), new_file)
-    new_file = re.sub(r'PrecLevel = ([^;]*);', 'PrecLevel = {};'.format(d_summer['PrecLevel']), new_file)
-    new_file = re.sub(r'WindLayers\s*\{([^\}^\{]*)}', string_wind_layer(d_summer['WindLayers']), new_file)
+    new_file = re.sub(r'CloudLevel = ([^;]*);', 'CloudLevel = {};'.format(dict_options['CloudLevel']), new_file)
+    new_file = re.sub(r'SeaState = ([^;]*);', 'SeaState = {};'.format(dict_options['SeaState']), new_file)
+    new_file = re.sub(r'Turbulence = ([^;]*);', 'Turbulence = {};'.format(dict_options['Turbulence']), new_file)
+    new_file = re.sub(r'Pressure = ([^;]*);', 'Pressure = {};'.format(dict_options['Pressure']), new_file)
+    new_file = re.sub(r'Haze = ([^;]*);', 'Haze = {};'.format(dict_options['Haze']), new_file)
+    new_file = re.sub(r'Temperature = ([^;]*);', 'Temperature = {};'.format(dict_options['Temperature']), new_file)
+    new_file = re.sub(r'PrecType = ([^;]*);', 'PrecType = {};'.format(dict_options['PrecType']), new_file)
+    new_file = re.sub(r'PrecLevel = ([^;]*);', 'PrecLevel = {};'.format(dict_options['PrecLevel']), new_file)
+    new_file = re.sub(r'WindLayers\s*\{([^\}^\{]*)}', string_wind_layer(dict_options['WindLayers']), new_file)
     # writing the new mission file to a temp.Mission file
     # output_path = path_raw_missions + '\\temp.Mission'
     with open(path_raw_missions + '\\' + mission, 'w') as f:
