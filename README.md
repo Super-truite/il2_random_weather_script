@@ -7,7 +7,7 @@ This way, the next time the mission gets launched in the mission rotation, the w
 * make sure gamelog=1 in your startup.cfg file
 
 ## Python Installation
-Install python 3. For instance, use Anaconda to install python on your server :
+Install python 3.6 For instance, use Anaconda to install python on your server :
 https://repo.anaconda.com/archive/Anaconda3-2019.10-Windows-x86_64.exe
 To launch a python console: windows key + type anaconda + hit enter on  'anaconda prompt' 
 in this terminal create and activate the environment with the required packages:
