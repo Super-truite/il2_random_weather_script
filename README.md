@@ -18,12 +18,10 @@ pip install numpy regex
 The Dogfight folder should not contain the .Mission file as it would be downloaded by players by default which is not optimal (slower download speed).
 Instead the raw mission files should be in another folder. In my case:
  "C:\\Program Files (x86)\\1C Game Studios\IL-2 Sturmovik Great Battles\\data\\Multiplayer\\raw_missions"
- example with a dogfight folder with two missions: 
-![alt text](dogfight.PNG)
+In both folders (dogfight and raw_missions) I copy paste the  briefing files and images/audio files used in the missions.
+the corresponding 'raw mission' folder. Warning: check that the .list files contains paths starting with multiplayer/dogfight/
+for the briefing file paths.  
 
-You can see the  .msnbin file as well as briefing files and images/audio files used in the missions.
-the corresponding 'raw mission' folder:
-![alt text](raw_mission.PNG)
 
 ## Configuring the script
 * Change the paths to your il2 installation and to your dogfight and raw mission folder in the config_weather_script.py file

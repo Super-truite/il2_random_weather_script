@@ -13,8 +13,6 @@ path_data = config_weather_script.path_data
 path_mlg = config_weather_script.path_mlg
 path_raw_missions = config_weather_script.path_raw_missions
 path_dogfight = config_weather_script.path_dogfight
-random_windlayers = config_weather_script.random_windlayers
-
 
 
 def string_wind_layer(random_windlayer):
@@ -28,8 +26,7 @@ def string_wind_layer(random_windlayer):
     1000 :     {4} :     {5};
     2000 :     {6} :     {7};
     5000 :     {8} :     {9};
-  }}""".format(
-        *[random_windlayer[k][l] for k in ['ground', '500', '1000', '2000', '5000'] for l in ['direction', 'speed']])
+  }}""".format(*[random_windlayer[k][l] for k in ['ground', '500', '1000', '2000', '5000'] for l in ['direction', 'speed']])
     return s
 
 
@@ -118,6 +115,7 @@ def mission_file(mlg_output):
     for output in mlg_output:
         if 'MFile:' in output:
             mission = output.split('\\')[-1].split('.msnbin')[0]
+            print('new mission: ', mission)
             return mission
     return ''
 
@@ -170,7 +168,6 @@ if __name__ == '__main__':
         current_mission = update_current_mission(current_mission, mlg_output)
     clean_mlg_log()
     while True:
-        print(current_mission)
         logs = list_mlg_logs()
         for log in logs:
             if not log in already_processed_mlg_logs:
@@ -180,13 +177,14 @@ if __name__ == '__main__':
                 if check_if_mission_ended(mlg_output):
                     print('MISSION END: random weather script launched')
                     randomize_weather(current_mission)
-                    path_temp_mission = path_raw_missions + '\\' + current_mission
+                    path_original_mission = path_raw_missions + '\\' + current_mission
+                    path_temp_mission = path_dogfight + '\\' + current_mission
+                    shutil.copy(path_original_mission, path_temp_mission)
                     msnbin_conversion(path_temp_mission)
-                    path_temp_msnbin = path_raw_missions + '\\' + current_mission.split('.')[0] + '.msnbin'
-                    path_final_msnbin = path_dogfight + '\\' + current_mission.split('.')[0] + '.msnbin'
-                    shutil.move(path_temp_msnbin, path_final_msnbin)
+                    os.remove(path_temp_mission)
+                    for extension in ['.list', '.chs', '.eng', '.fra', '.ger', '.pol', '.rus', '.spa']:
+                        f = path_raw_missions + '\\' + current_mission.split('.')[0] + extension
+                        f2 = path_dogfight + '\\' + current_mission.split('.')[0] + extension
+                        shutil.copy(f, f2)
 
         time.sleep(1)
-    """
-
-    TODO: check why the final .msnbin is not working. Try compiling diretly in the dogfight folder?
