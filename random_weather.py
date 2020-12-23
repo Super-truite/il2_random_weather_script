@@ -179,8 +179,7 @@ def randomize_weather(mission):
     original_file = open(path_raw_missions + '\\' + mission, 'r').read()
     season = re.findall(r'SeasonPrefix = \"([^;]*)\";', original_file)[0]
     dict_options = make_random_mission_options(season)
-    new_file = re.sub(r'CloudConfig = \"([^"]*)\";', 'CloudConfig = "{}";'.format(dict_options['CloudConfig']),
-                      original_file)
+    new_file = re.sub(r'CloudConfig = \"([^"]*)\";', 'CloudConfig = "{}";'.format(dict_options['CloudConfig']), original_file)
     new_file = re.sub(r'CloudLevel = ([^;]*);', 'CloudLevel = {};'.format(dict_options['CloudLevel']), new_file)
     new_file = re.sub(r'SeaState = ([^;]*);', 'SeaState = {};'.format(dict_options['SeaState']), new_file)
     new_file = re.sub(r'Turbulence = ([^;]*);', 'Turbulence = {};'.format(dict_options['Turbulence']), new_file)
@@ -190,8 +189,7 @@ def randomize_weather(mission):
     new_file = re.sub(r'PrecType = ([^;]*);', 'PrecType = {};'.format(dict_options['PrecType']), new_file)
     new_file = re.sub(r'PrecLevel = ([^;]*);', 'PrecLevel = {};'.format(dict_options['PrecLevel']), new_file)
     new_file = re.sub(r'WindLayers\s*\{([^\}^\{]*)}', string_wind_layer(dict_options['WindLayers']), new_file)
-    # writing the new mission file to a temp.Mission file
-    # output_path = path_raw_missions + '\\temp.Mission'
+    new_file = re.sub(r'Time = ([^;]*);', 'Time = {};'.format(dict_options['Time']), new_file)
     with open(path_raw_missions + '\\' + mission, 'w') as f:
         f.write(new_file)
 
