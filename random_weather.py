@@ -65,7 +65,7 @@ def make_random_mission_options(season):
         random_winds = ['%.2f' % rw for rw in random_winds]
         dict_options = {'Time': '{0}:30:0'.format(random.randint(6, 17)),
                     'CloudLevel': random.randint(500, max_level),
-                    'CloudConfig': "summer\\\{0}_0{1}\\sky.ini".format(clouds_type, random.randint(0, 9)),
+                    'CloudConfig': "summer\\{0}_0{1}\\sky.ini".format(clouds_type, random.randint(0, 9)),
                     'SeaState': random.randint(0, 6),
                     'Turbulence': random.randint(0, 1),
                     'Temperature': random.randint(20, 35),
@@ -95,7 +95,7 @@ def make_random_mission_options(season):
         random_winds = ['%.2f' % rw for rw in random_winds]
         dict_options = {'Time': '{0}:30:0'.format(random.randint(6, 17)),
                     'CloudLevel': random.randint(500, max_level),
-                    'CloudConfig': "winter\\\{0}_0{1}\\sky.ini".format(clouds_type, random.randint(0, 9)),
+                    'CloudConfig': "winter\\{0}_0{1}\\sky.ini".format(clouds_type, random.randint(0, 9)),
                     'SeaState': random.randint(0, 6),
                     'Turbulence': random.randint(0, 1),
                     'Temperature': random.randint(-35, 10),
