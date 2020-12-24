@@ -189,7 +189,7 @@ def randomize_weather(mission):
     new_file = re.sub(r'PrecType = ([^;]*);', 'PrecType = {};'.format(dict_options['PrecType']), new_file)
     new_file = re.sub(r'PrecLevel = ([^;]*);', 'PrecLevel = {};'.format(dict_options['PrecLevel']), new_file)
     new_file = re.sub(r'WindLayers\s*\{([^\}^\{]*)}', string_wind_layer(dict_options['WindLayers']), new_file)
-    new_file = re.sub(r'Time = ([^;]*);', 'Time = {};'.format(dict_options['Time']), new_file)
+    new_file = re.sub(r'Time = ([^;]*);[\s\S]*Date', 'Time = {};\n  Date'.format(dict_options['Time']), new_file)
     with open(path_raw_missions + '\\' + mission, 'w') as f:
         f.write(new_file)
 
