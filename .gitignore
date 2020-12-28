@@ -1,3 +1,5 @@
 build/
 dist/
+dist.zip
 __pycache__/
+.idea/
