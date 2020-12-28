@@ -30,8 +30,10 @@ In this prompt create and activate the environment with the required packages:
 ```
 conda create -n il2 python=3.6 configparser numpy regex -y
 activate il2
+pip install git+https://github.com/lefufu/PylGBMiMec
 ```
-If you already have a python installation, the required packages are numpy and regex
+If you already have a python installation, the required packages are numpy, regex
+and https://github.com/lefufu/PylGBMiMec
 ### launch the script 
 * In the anaconda prompt, go to the script folder (using the cd commandline)
 * After your dserver is running, launch the script: 
