@@ -47,7 +47,7 @@ The weather should change in between two missions
 install py2exe (pip install py2exe)
 and at the root of the project:
 ```
-
+python setup.py py2exe
 ```
 
 ### Thanks
