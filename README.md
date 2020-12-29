@@ -23,6 +23,7 @@ In the dist folder, click on random_weather.exe. A command propmpt will appear, 
 
 ## Installation for developers
 ### Python Installation 
+Install git: https://git-scm.com/download
 Install python 3.6 For instance, use Anaconda to install python on your server :
 https://repo.anaconda.com/archive/Anaconda3-2019.10-Windows-x86_64.exe
 To launch a command prompt: windows key + type anaconda + hit enter on  'anaconda prompt'.
