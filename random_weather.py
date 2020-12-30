@@ -73,7 +73,7 @@ def make_random_mission_options(season):
     elif season == 'wi':
         max_level = 3500
         if clouds_type == '04_overcast':
-            PrecType = random.randint(0, 1)
+            PrecType = random.choice([0, 2])
             if PrecType == 2:
                 PrecLevel = random.randint(0, 100)
                 max_level = 1000
