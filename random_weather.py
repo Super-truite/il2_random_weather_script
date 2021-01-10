@@ -210,5 +210,8 @@ if __name__ == '__main__':
                     shutil.copy(path_modified_mission, path_temp_mission)
                     msnbin_conversion(path_temp_mission)
                     os.remove(path_temp_mission)
+                    f = path_raw_missions + '\\' + current_mission.split('.')[0] + '.list
+                    f2 = path_dogfight + '\\' + current_mission.split('.')[0] + '.list
+                    shutil.copy(f, f2)
                     print('randomization done for:', current_mission)
         time.sleep(1)
